@@ -1,0 +1,9 @@
+
+# Ignorar pastas do sistema
+.DS_Store
+*.log
+*.class
+*.jar
+
+# Ignorar pasta de dependências (se houver)
+target/
