@@ -11,7 +11,7 @@ public class ConexaoBD {
         // Informações de conexão
         String url = "jdbc:mysql://localhost:3306/sistema_agil"; 
         String usuario = "root"; 
-        String senha = "021998@Amor";
+        String senha = "Senac@2024";
         
         try {
             // Retorna a conexão com o banco de dados
