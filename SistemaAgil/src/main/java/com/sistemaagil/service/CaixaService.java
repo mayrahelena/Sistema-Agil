@@ -8,6 +8,6 @@ package com.sistemaagil.service;
  *
  * @author mayhe
  */
-public class ProdutoService {
+public class CaixaService {
     
 }
