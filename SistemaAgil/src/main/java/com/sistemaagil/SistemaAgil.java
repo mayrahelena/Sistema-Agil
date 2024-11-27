@@ -1,6 +1,6 @@
 package com.sistemaagil;
 
-import com.sistemaagil.estoque.EstoqueService;
+import com.sistemaagil.service.EstoqueService;
 import java.sql.Date;
 import java.util.Scanner;
 
@@ -13,8 +13,8 @@ public class SistemaAgil {
 
         do {
             System.out.println("=== Sistema de Gestão de Estoque ===");
-            System.out.println("1. Adicionar Produto");
-            System.out.println("2. Remover Produto");
+            System.out.println("1. Adicionar Estoque");
+            System.out.println("2. Remover Estoque");
             System.out.println("3. Registrar Entrada no Estoque");
             System.out.println("4. Registrar Saída do Estoque");
             System.out.println("5. Gerar Relatório de Estoque");
@@ -24,10 +24,10 @@ public class SistemaAgil {
 
             switch (opcao) {
                 case 1:
-                    adicionarProduto(scanner, estoqueService);
+                    adicionarEstoque(scanner, estoqueService);
                     break;
                 case 2:
-                    removerProduto(scanner, estoqueService);
+                    removerEstoque(scanner, estoqueService);
                     break;
                 case 3:
                     registrarEntrada(scanner, estoqueService);
@@ -37,11 +37,6 @@ public class SistemaAgil {
                     break;
                 case 5:
                     estoqueService.gerarRelatorioEstoque();
-                    break;
-                case 6:
-                    System.out.print("ID do Produto a ser marcado como vendido: ");
-                    int idProduto = scanner.nextInt();
-                    produtoDAO.marcarComoVendido(idProduto);
                     break;
                 case 0:
                     System.out.println("Saindo do sistema...");
@@ -54,9 +49,9 @@ public class SistemaAgil {
         scanner.close();
     }
 
-    private static void adicionarProduto(Scanner scanner, EstoqueService estoqueService) {
+    private static void adicionarEstoque(Scanner scanner, EstoqueService estoqueService) {
         scanner.nextLine(); // Limpar o buffer
-        System.out.print("Nome do Produto: ");
+        System.out.print("Nome do Estoque: ");
         String nome = scanner.nextLine();
 
         double preco;
@@ -115,30 +110,32 @@ public class SistemaAgil {
             }
         }
 
-        estoqueService.adicionarProduto(nome, preco, precoCusto, margemLucro, validade, quantidade);
+        estoqueService.adicionarEstoque(nome, preco, precoCusto, margemLucro, validade, quantidade);
     }
 
-    private static void removerProduto(Scanner scanner, EstoqueService estoqueService) {
-        System.out.print("ID do Produto a ser removido: ");
-        int idProduto = scanner.nextInt();
-        estoqueService.removerProduto(idProduto);
+    private static void removerEstoque(Scanner scanner, EstoqueService estoqueService) {
+        System.out.print("ID do Estoque a ser removido: ");
+        int idEstoque = scanner.nextInt();
+        estoqueService.removerEstoque(idEstoque);
     }
 
     private static void registrarEntrada(Scanner scanner, EstoqueService estoqueService) {
-        System.out.print("ID do Produto: ");
-        int idProduto = scanner.nextInt();
+        System.out.print("ID do Estoque: ");
+        int idEstoque = scanner.nextInt();
         System.out.print("Quantidade a ser adicionada: ");
         int quantidade = scanner.nextInt();
 
-        estoqueService.registrarEntrada(idProduto, quantidade);
+        estoqueService.registrarEntrada(idEstoque, quantidade);
     }
 
     private static void registrarSaida(Scanner scanner, EstoqueService estoqueService) {
-        System.out.print("ID do Produto: ");
-        int idProduto = scanner.nextInt();
+        System.out.print("ID do Estoque: ");
+        int idEstoque = scanner.nextInt();
         System.out.print("Quantidade a ser removida: ");
         int quantidade = scanner.nextInt();
 
-        estoqueService.registrarSaida(idProduto, quantidade);
+        estoqueService.registrarSaida(idEstoque, quantidade);
     }
+    
+    
 }
