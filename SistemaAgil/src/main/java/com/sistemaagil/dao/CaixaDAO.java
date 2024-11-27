@@ -7,12 +7,25 @@ import java.sql.*;
 public class CaixaDAO {
 
     // Método para obter uma conexão com o banco de dados
+
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public Connection getConnection() throws SQLException {
         // Ajuste conforme sua configuração do banco de dados
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/seu_banco", "usuario", "senha");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/sistema_agil", "root", "021998@Amor");
     }
 
     // Método para buscar o caixa aberto
+
+    /**
+     *
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
     public Caixa buscarCaixaAberto(Connection connection) throws SQLException {
         String sql = "SELECT * FROM caixa WHERE fechamento IS NULL ORDER BY abertura DESC LIMIT 1";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

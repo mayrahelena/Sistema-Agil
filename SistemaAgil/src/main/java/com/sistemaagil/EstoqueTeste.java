@@ -1,35 +1,41 @@
 package com.sistemaagil;
-import com.sistemaagil.model.Estoque;  // Alterado para Estoque
-import com.sistemaagil.service.EstoqueService;  // Alterado para EstoqueService
+
+import com.sistemaagil.model.Estoque;
+import com.sistemaagil.service.EstoqueService;
+
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.Scanner;
 
 public class EstoqueTeste {
     public static void main(String[] args) {
-        EstoqueService estoqueService = new EstoqueService();  // Alterado para EstoqueService
+        Scanner scanner = new Scanner(System.in);
+        EstoqueService estoqueService = new EstoqueService();
 
         try {
-            // Teste 1: Abrir o estoque
-            System.out.println("Abrindo o estoque...");
-            Estoque estoqueAberto = estoqueService.abrirEstoque(100.00);  // Alterado para abrirEstoque
-            System.out.println("Estoque aberto com ID: " + estoqueAberto.getId());
+            System.out.println("=== Teste do Módulo de Estoque ===");
+            
+            Estoque novoProduto = new Estoque("Produto A", 10.00, 5.00, 50.0, new Date(), 100, 10, "1234567890123");
+            estoqueService.adicionarEstoque(novoProduto); // Adiciona um novo produto ao estoque
+            System.out.println("Produto adicionado ao estoque: " + novoProduto.getNome());
 
-            // Teste 2: Buscar o estoque aberto
-            System.out.println("Buscando o estoque aberto...");
-            Estoque estoqueAtual = estoqueService.obterEstoqueAberto();  // Alterado para obterEstoqueAberto
-            if (estoqueAtual != null) {
-                System.out.println("Estoque encontrado: ID " + estoqueAtual.getId() +
-                        ", Saldo Inicial: " + estoqueAtual.getSaldoInicial());
-            } else {
-                System.out.println("Nenhum estoque aberto.");
-            }
+            // Registrar entrada no estoque
+            estoqueService.registrarEntrada(novoProduto.getId(), 20); // Certifique-se de que o ID está definido após a inserção
+            System.out.println("Entrada registrada no estoque para o produto: " + novoProduto.getNome());
 
-            // Teste 3: Fechar o estoque
-            System.out.println("Fechando o estoque...");
-            estoqueService.fecharEstoque(estoqueAtual.getId(), 150.00);  // Alterado para fecharEstoque
-            System.out.println("Estoque fechado com sucesso.");
+            // Registrar saída do estoque
+            estoqueService.registrarSaida(novoProduto.getId(), 10); 
+            System.out.println("Saída registrada no estoque para o produto: " + novoProduto.getNome());
 
+            // Gerar relatório do estoque
+            estoqueService.gerarRelatorioEstoque(); 
+
+        } catch (SQLException e) {
+            System.err.println("Erro durante os testes do estoque: " + e.getMessage());
         } catch (IllegalStateException e) {
             System.err.println("Erro no estado do sistema: " + e.getMessage());
+        } finally {
+            scanner.close();
         }
     }
 }
