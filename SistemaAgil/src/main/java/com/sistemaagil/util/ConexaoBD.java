@@ -12,7 +12,7 @@ public class ConexaoBD {
         String url = "jdbc:mysql://localhost:3306/sistema_agil"; 
         String usuario = "root"; 
         String senha = "Senac@2024";
-        
+
         try {
             // Retorna a conexão com o banco de dados
             return DriverManager.getConnection(url, usuario, senha);

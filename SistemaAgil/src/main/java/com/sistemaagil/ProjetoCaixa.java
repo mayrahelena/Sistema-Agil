@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.sistemaagil;
 
 import com.sistemaagil.model.Caixa;
@@ -36,4 +37,13 @@ public class ProjetoCaixa {
             System.err.println("Erro no estado do sistema: " + e.getMessage());
         }
     }
+=======
+
+package com.sistemaagil;
+
+public class ProjetoCaixa {
+>>>>>>> cb038f431fe62a37815d79b4a4c38a04c775541d
 }
+
+   
+

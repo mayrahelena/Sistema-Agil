@@ -121,4 +121,16 @@ public class EstoqueDAO {
             System.out.println("Erro ao verificar estoque mínimo: " + e.getMessage());
         }
     }
+
+    public void removerEstoque(int idEstoque) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void adicionarEstoque(String nome, double preco, double precoCusto, double margemLucro, Date validade, int quantidade) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void relatorioEstoque() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
