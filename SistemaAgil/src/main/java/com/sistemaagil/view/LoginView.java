@@ -1,5 +1,8 @@
 package com.sistemaagil.view;
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author 1030365
@@ -101,22 +104,22 @@ public class LoginView extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(120, Short.MAX_VALUE)
+                .addContainerGap(108, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(txtSenha)
                     .addComponent(lblEsqueciAsCredenciais, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAcessar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(81, Short.MAX_VALUE)
+                .addContainerGap(95, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
@@ -132,7 +135,7 @@ public class LoginView extends javax.swing.JFrame {
                 .addComponent(lblEsqueciAsCredenciais)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAcessar)
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2);
@@ -143,9 +146,20 @@ public class LoginView extends javax.swing.JFrame {
         jPanel4.setLayout(new java.awt.GridLayout(1, 1));
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Captura_de_tela_2024-11-26_152024-removebg-preview-resized.png"))); // NOI18N
-        jLabel4.setMinimumSize(new java.awt.Dimension(221, 133));
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/logo-sistema-agil.png"))); // NOI18N
         jPanel4.add(jLabel4);
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/src/main/resources/imagens/logo-sistema-agil.png"));
+
+        // Obter o tamanho atual do JLabel
+        int width = jLabel1.getWidth();
+        int height = jLabel1.getHeight();
+
+        // Redimensionar a imagem para caber no JLabel
+        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        // Definir o ícone redimensionado no JLabel
+        jLabel1.setIcon(scaledIcon);
 
         jPanel3.add(jPanel4);
         jPanel4.getAccessibleContext().setAccessibleParent(jPanel2);
