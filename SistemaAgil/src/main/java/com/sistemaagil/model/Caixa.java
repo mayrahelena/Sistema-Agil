@@ -11,14 +11,17 @@ public class Caixa {
     private double saldoFinal;
     private Map<String, Double> entradasPorFormaPagamento;
     private Map<String, Double> saidasPorFormaPagamento;
-    private double limiteCaixa;  // Adiciona o campo limiteCaixa
+    private double limiteCaixa; // Adiciona o campo limiteCaixa
+    private String status; // Adiciona o campo status
+    private int idFuncionario; // Adiciona o campo idFuncionario
 
     // Construtor vazio
     public Caixa() {}
 
     // Construtor com parâmetros
     public Caixa(int id, LocalDateTime abertura, LocalDateTime fechamento, double saldoInicial, double saldoFinal,
-                 Map<String, Double> entradasPorFormaPagamento, Map<String, Double> saidasPorFormaPagamento, double limiteCaixa) {
+                 Map<String, Double> entradasPorFormaPagamento, Map<String, Double> saidasPorFormaPagamento,
+                 double limiteCaixa, String status, int idFuncionario) {
         this.id = id;
         this.abertura = abertura;
         this.fechamento = fechamento;
@@ -26,7 +29,9 @@ public class Caixa {
         this.saldoFinal = saldoFinal;
         this.entradasPorFormaPagamento = entradasPorFormaPagamento;
         this.saidasPorFormaPagamento = saidasPorFormaPagamento;
-        this.limiteCaixa = limiteCaixa; // Inicializa limiteCaixa
+        this.limiteCaixa = limiteCaixa;
+        this.status = status; // Inicializa o status
+        this.idFuncionario = idFuncionario; // Inicializa o idFuncionario
     }
 
     // Getters e Setters
@@ -87,10 +92,26 @@ public class Caixa {
     }
 
     public double getLimiteCaixa() {
-        return limiteCaixa;  // Retorna o valor do limiteCaixa
+        return limiteCaixa;
     }
 
     public void setLimiteCaixa(double limiteCaixa) {
-        this.limiteCaixa = limiteCaixa;  // Define o valor de limiteCaixa
+        this.limiteCaixa = limiteCaixa;
+    }
+
+    public String getStatus() {
+        return status; // Retorna o status do caixa
+    }
+
+    public void setStatus(String status) {
+        this.status = status; // Define o status do caixa
+    }
+
+    public int getIdFuncionario() {
+        return idFuncionario; // Retorna o ID do funcionário associado
+    }
+
+    public void setIdFuncionario(int idFuncionario) {
+        this.idFuncionario = idFuncionario; // Define o ID do funcionário associado
     }
 }
