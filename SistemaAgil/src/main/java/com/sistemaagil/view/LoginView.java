@@ -36,7 +36,7 @@ public class LoginView extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
@@ -145,21 +145,9 @@ public class LoginView extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(204, 204, 204));
         jPanel4.setLayout(new java.awt.GridLayout(1, 1));
 
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/logo-sistema-agil.png"))); // NOI18N
-        jPanel4.add(jLabel4);
-        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/src/main/resources/imagens/logo-sistema-agil.png"));
-
-        // Obter o tamanho atual do JLabel
-        int width = jLabel1.getWidth();
-        int height = jLabel1.getHeight();
-
-        // Redimensionar a imagem para caber no JLabel
-        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-
-        // Definir o ícone redimensionado no JLabel
-        jLabel1.setIcon(scaledIcon);
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/logo-sistema-agil.png"))); // NOI18N
+        jPanel4.add(jLabel6);
 
         jPanel3.add(jPanel4);
         jPanel4.getAccessibleContext().setAccessibleParent(jPanel2);
@@ -230,8 +218,8 @@ public class LoginView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
