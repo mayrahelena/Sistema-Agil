@@ -7,14 +7,19 @@ import java.sql.*;
 import java.util.Date;
 
 public class EstoqueDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public EstoqueDAO() {
         this.connection = ConexaoBD.getConnection();
     }
 
-    // Adicionar Produto no Estoque
-    public void adicionarProduto(Estoque estoque) {
+    /**
+     * Adiciona um novo produto ao estoque.
+     *
+     * @param estoque O objeto Estoque que contém as informações do produto a ser adicionado.
+     * @throws SQLException Se ocorrer um erro ao acessar o banco de dados.
+     */
+    public void adicionarProduto(Estoque estoque) throws SQLException {
         String sql = "INSERT INTO produtos (nome, preco, preco_custo, margem_lucro, validade, quantidade, quantidade_minima, codigo_barras) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, estoque.getNome());
@@ -33,7 +38,7 @@ public class EstoqueDAO {
     }
 
     // Remover Produto do Estoque
-    public void removerProduto(int idProduto) {
+    public void removerProduto(int idProduto) throws SQLException {
         String sql = "DELETE FROM produtos WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, idProduto);
@@ -49,7 +54,7 @@ public class EstoqueDAO {
     }
 
     // Registrar Entrada de Produto no Estoque
-    public void registrarEntrada(int idProduto, int quantidade) {
+    public void registrarEntrada(int idProduto, int quantidade) throws SQLException {
         String sql = "UPDATE produtos SET quantidade = quantidade + ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, quantidade);
@@ -66,7 +71,7 @@ public class EstoqueDAO {
     }
 
     // Registrar Saída de Produto do Estoque
-    public void registrarSaida(int idProduto, int quantidade) {
+    public void registrarSaida(int idProduto, int quantidade) throws SQLException {
         String sql = "UPDATE produtos SET quantidade = quantidade - ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, quantidade);
@@ -83,8 +88,8 @@ public class EstoqueDAO {
     }
 
     // Gerar Relatório de Estoque
-    public void gerarRelatorioEstoque() {
-        String sql = "SELECT id, nome, quantidade, quantidade_minima FROM produtos";
+    public void gerarRelatorioEstoque() throws SQLException {
+        String sql = "SELECT id, nome, quantidade FROM produtos";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             System.out.println("Relatório de Estoque:");
@@ -92,10 +97,9 @@ public class EstoqueDAO {
                 int idProduto = rs.getInt("id");
                 String nomeProduto = rs.getString("nome");
                 int quantidade = rs.getInt("quantidade");
-                int quantidadeMinima = rs.getInt("quantidade_minima");
 
-                System.out.printf("ID: %d | Produto: %s | Quantidade: %d | Quantidade Mínima: %d%n", 
-                        idProduto, nomeProduto, quantidade, quantidadeMinima);
+                System.out.printf("ID: %d | Produto: %s | Quantidade: %d%n", 
+                        idProduto, nomeProduto, quantidade);
             }
         } catch (SQLException e) {
             System.out.println("Erro ao gerar relatório de estoque: " + e.getMessage());
@@ -103,7 +107,7 @@ public class EstoqueDAO {
     }
 
     // Verificar Estoque Mínimo
-    public void verificarEstoqueMinimo() {
+    public void verificarEstoqueMinimo() throws SQLException {
         String sql = "SELECT id, nome, quantidade, quantidade_minima FROM produtos WHERE quantidade <= quantidade_minima";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -122,15 +126,18 @@ public class EstoqueDAO {
         }
     }
 
-    public void removerEstoque(int idEstoque) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void adicionarEstoque(String nome, double preco, double precoCusto, double margemLucro, Date validade, int quantidade) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void relatorioEstoque() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // Gerar Relatório de Produtos Próximos do Vencimento
+    public void relatorioProdutosProximosVencimento() throws SQLException {
+        String sql = "SELECT * FROM produtos WHERE DATEDIFF(validade, CURDATE()) <= 30";
+        try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+           System.out.println("Produtos que vão vencer em até 30 dias:");
+           while (rs.next()) {
+               String nomeProduto = rs.getString("nome");
+               Date validade = rs.getDate("validade");
+               System.out.printf("Produto: %s | Validade: %s%n", nomeProduto, validade);
+           }
+       } catch (SQLException e) {
+           System.out.println("Erro ao gerar relatório: " + e.getMessage());
+       }
     }
 }
