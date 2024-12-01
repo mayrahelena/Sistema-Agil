@@ -4,42 +4,47 @@ import com.sistemaagil.dao.RelatorioDAO;
 import com.sistemaagil.model.Relatorio;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RelatorioService {
     private final RelatorioDAO relatorioDAO;
     private final Connection connection;
+
+    // Consultas SQL como constantes para facilitar a manutenção
+    private static final String SQL_VERIFICAR_RELATORIO = 
+            "SELECT COUNT(*) FROM Relatorio WHERE Especificacoes = ? AND Tipo = ?";
+    private static final String SQL_SALDO_CAIXA = 
+            "SELECT SaldoInicial, SaldoFinal FROM Caixa WHERE Status = 'Fechado' ORDER BY DataFechamento DESC LIMIT 1";
+    private static final String SQL_ESTOQUE = 
+            "SELECT Nome_Produto, Estoque, Estoque_Minimo FROM Produto";
+    private static final String SQL_LISTAR_RELATORIOS_POR_TIPO = 
+            "SELECT * FROM Relatorio WHERE Tipo = ?";
 
     public RelatorioService(RelatorioDAO relatorioDAO, Connection connection) {
         this.relatorioDAO = relatorioDAO;
         this.connection = connection;
     }
 
-    // Método para gerar um relatório
-    public void gerarRelatorio(String especificacoes, String tipo, java.util.Date data) throws SQLException {
+    public void gerarRelatorio(String especificacoes, String tipo, LocalDateTime data) throws SQLException {
         Relatorio relatorio = new Relatorio(especificacoes, tipo, data);
         relatorioDAO.salvarRelatorio(relatorio);
     }
 
-    // Método para verificar se o relatório já existe no banco
     public boolean verificarRelatorioExistente(String especificacoes, String tipo) throws SQLException {
-        String sqlVerificarRelatorio = "SELECT COUNT(*) FROM Relatorio WHERE Especificacoes = ? AND Tipo = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sqlVerificarRelatorio)) {
+        try (PreparedStatement stmt = connection.prepareStatement(SQL_VERIFICAR_RELATORIO)) {
             stmt.setString(1, especificacoes);
             stmt.setString(2, tipo);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0; // Se já existir, retorna true
-                }
+                return rs.next() && rs.getInt(1) > 0;
             }
         }
-        return false;
     }
 
-    // Método para gerar relatório de forma segura, verificando duplicidade
-    public void gerarRelatorioSeguindoVerificacao(String especificacoes, String tipo, java.util.Date data) throws SQLException {
+    public void gerarRelatorioSeguindoVerificacao(String especificacoes, String tipo, LocalDateTime data) throws SQLException {
         if (!verificarRelatorioExistente(especificacoes, tipo)) {
             gerarRelatorio(especificacoes, tipo, data);
         } else {
@@ -47,81 +52,62 @@ public class RelatorioService {
         }
     }
 
-    // Método para gerar relatório de Caixa com dados do banco
-    public void gerarRelatorioCaixa(String especificacoes) throws SQLException {
-        especificacoes += "----------------------------------------------------\n";
-
-        // Consultar os dados de caixa no banco
-        String sqlCaixa = "SELECT SaldoInicial, SaldoFinal FROM Caixa WHERE Status = 'Fechado' ORDER BY DataFechamento DESC LIMIT 1";
-        try (PreparedStatement stmt = connection.prepareStatement(sqlCaixa);
+    // Método para consultar saldo de caixa
+    private String consultarSaldoCaixa() throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(SQL_SALDO_CAIXA);
              ResultSet rs = stmt.executeQuery()) {
-
             if (rs.next()) {
                 double saldoInicial = rs.getDouble("SaldoInicial");
                 double saldoFinal = rs.getDouble("SaldoFinal");
-
-                especificacoes += "Saldo Inicial: R$ " + saldoInicial + "\n"; // Dados do banco
-                especificacoes += "Total Pix: R$ 0.00\n"; // Você pode adicionar a consulta para Pix se necessário
-                especificacoes += "Total Dinheiro: R$ 0.00\n"; // Como acima, pode ser consultado conforme sua necessidade
-                especificacoes += "Total Crédito: R$ 0.00\n"; // Adapte conforme a lógica que você tem para tipos de pagamento
-                especificacoes += "Total Débito: R$ 0.00\n"; // Igualmente para o débito
-                especificacoes += "Saldo Final: R$ " + saldoFinal + "\n"; // Dados do banco
+                return String.format("Saldo Inicial: R$ %.2f\nSaldo Final: R$ %.2f\n", saldoInicial, saldoFinal);
             }
         }
-
-        especificacoes += "----------------------------------------------------\n";
-
-        // Gerar relatório de Caixa
-        gerarRelatorio(especificacoes, Relatorio.TIPO_CAIXA, new java.util.Date());
+        return "Saldo de caixa não encontrado.\n";
     }
 
-    // Método para gerar relatório de Estoque com dados do banco
+    public void gerarRelatorioCaixa(String especificacoes) throws SQLException {
+        especificacoes += "----------------------------------------------------\n";
+        especificacoes += consultarSaldoCaixa();
+        especificacoes += "----------------------------------------------------\n";
+        gerarRelatorio(especificacoes, Relatorio.TIPO_CAIXA, LocalDateTime.now());
+    }
+
     public void gerarRelatorioEstoque() throws SQLException {
         String especificacoes = "Relatório de Estoque Atualizado:\n";
         especificacoes += "----------------------------------------------------\n";
 
-        // Consultar os produtos do banco de dados
-        String sqlEstoque = "SELECT Nome_Produto, Estoque, Estoque_Minimo FROM Produto";
-        try (PreparedStatement stmt = connection.prepareStatement(sqlEstoque);
+        try (PreparedStatement stmt = connection.prepareStatement(SQL_ESTOQUE);
              ResultSet rs = stmt.executeQuery()) {
 
-            boolean encontrouProdutos = false;  // Flag para verificar se encontramos produtos
-
+            boolean encontrouProdutos = false;
             while (rs.next()) {
-                especificacoes += rs.getString("Nome_Produto") + " - Estoque: " + rs.getInt("Estoque") + 
-                                  " - Estoque Mínimo: " + rs.getInt("Estoque_Minimo") + "\n";
-                encontrouProdutos = true;  // Encontramos pelo menos um produto
+                especificacoes += String.format("%s - Estoque: %d - Estoque Mínimo: %d\n",
+                        rs.getString("Nome_Produto"), rs.getInt("Estoque"), rs.getInt("Estoque_Minimo"));
+                encontrouProdutos = true;
             }
 
-            // Se não encontrou produtos, informe no relatório
             if (!encontrouProdutos) {
                 especificacoes += "Nenhum produto encontrado no estoque.\n";
             }
         }
 
         especificacoes += "----------------------------------------------------\n";
-
-        // Gerar o relatório de Estoque
-        gerarRelatorio(especificacoes, Relatorio.TIPO_ESTOQUE, new java.util.Date());
+        gerarRelatorio(especificacoes, Relatorio.TIPO_ESTOQUE, LocalDateTime.now());
     }
 
-    // Implementação do método listarRelatoriosPorTipo
-    public List<Relatorio> listarRelatoriosPorTipo(String tipo) throws SQLException {
+    // Método para listar relatórios por tipo, agora usando Optional
+    public Optional<List<Relatorio>> listarRelatoriosPorTipo(String tipo) throws SQLException {
         List<Relatorio> relatorios = new ArrayList<>();
-        String sql = "SELECT * FROM Relatorio WHERE Tipo = ?";
         
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(SQL_LISTAR_RELATORIOS_POR_TIPO)) {
             stmt.setString(1, tipo);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    String especificacoes = rs.getString("Especificacoes");
-                    String tipoRelatorio = rs.getString("Tipo");
-                    Date data = rs.getDate("Data");
-                    Relatorio relatorio = new Relatorio(especificacoes, tipoRelatorio, data);
-                    relatorios.add(relatorio);
+                    relatorios.add(new Relatorio(rs.getString("Especificacoes"), rs.getString("Tipo"), rs.getTimestamp("Data").toLocalDateTime()));
                 }
             }
         }
-        return relatorios;
+
+        return relatorios.isEmpty() ? Optional.empty() : Optional.of(relatorios);
     }
 }

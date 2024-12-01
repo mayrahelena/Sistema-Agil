@@ -11,7 +11,7 @@ public class ConexaoBD {
         // Informações de conexão
         String url = "jdbc:mysql://localhost:3306/sistema_agil"; 
         String usuario = "root"; 
-        String senha = "021998@Amor";
+        String senha = "Senac@2024";
 
         try {
             // Retorna a conexão com o banco de dados
@@ -21,5 +21,9 @@ public class ConexaoBD {
             System.out.println("Erro ao tentar conectar ao banco de dados: " + e.getMessage());
             return null; // Retorna null se a conexão falhar
         }
+    }
+
+    public static Connection conexaoBD() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

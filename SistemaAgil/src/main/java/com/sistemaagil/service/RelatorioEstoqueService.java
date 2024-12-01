@@ -1,12 +1,10 @@
 package com.sistemaagil.service;
 
-
 import com.sistemaagil.model.RelatorioEstoque;
 import com.sistemaagil.util.ConexaoBD;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class RelatorioEstoqueService {
 
@@ -34,4 +32,5 @@ public class RelatorioEstoqueService {
         return relatorios;
     }
 }
+
 

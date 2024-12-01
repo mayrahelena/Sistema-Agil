@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RelatorioDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public RelatorioDAO(Connection connection) {
         this.connection = connection;
@@ -18,7 +18,10 @@ public class RelatorioDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, relatorio.getEspecificacoes());
             stmt.setString(2, relatorio.getTipo());
-            stmt.setTimestamp(3, new Timestamp(relatorio.getData().getTime()));
+
+            // Usando setObject para LocalDateTime ou Timestamp
+            stmt.setObject(3, relatorio.getData());  // Para LocalDateTime, funciona diretamente
+
             stmt.executeUpdate();
         }
     }
@@ -31,10 +34,11 @@ public class RelatorioDAO {
             stmt.setString(1, tipo);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    // Ajustando a conversão para LocalDateTime
                     Relatorio relatorio = new Relatorio(
                         rs.getString("Especificacoes"),
                         rs.getString("Tipo"),
-                        rs.getTimestamp("Data")
+                        rs.getTimestamp("Data").toLocalDateTime()  // Convertendo Timestamp para LocalDateTime
                     );
                     relatorio.setId(rs.getInt("Relatorio_id"));
                     relatorios.add(relatorio);

@@ -1,8 +1,8 @@
 package com.sistemaagil.service;
 
-
 import com.sistemaagil.model.RelatorioFechamentoCaixa;
 import com.sistemaagil.util.ConexaoBD;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
