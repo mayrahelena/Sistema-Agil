@@ -16,9 +16,7 @@ public class RelatorioGeradoView extends javax.swing.JFrame {
      */
     public RelatorioGeradoView() {
         initComponents();
-        
-        RelatorioService rs = new RelatorioService();
-        txtRelatorioGerado.setText(rs.gerarRelatorio(especificacoes, tipo, data));
+
     }
 
     /**
